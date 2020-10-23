@@ -271,7 +271,8 @@ function testGetRow() {
         if (sheets is Sheet[]) {
             Sheet sheet = sheets[0];
             var res = sheet->getRow(2);
-            test:assertEquals(res.toString(), "Keetz 12", msg = "Failed to get the row values");
+            (int|string|float)[] expectedValue=["Keetz","12"];
+            test:assertEquals(res.toString(),expectedValue.toString(), msg = "Failed to get the row values");
         } else {
             test:assertFail(sheets.message());
         }
@@ -290,7 +291,8 @@ function testGetColumn() {
         if (sheets is Sheet[]) {
             Sheet sheet = sheets[0];
             var res = sheet->getColumn("B");
-            test:assertEquals(res.toString(), "Score 12 78 98 86", msg = "Failed to get the column values");
+            (int|string|float)[] expectedValue=["Score","12","78","98","86"];
+            test:assertEquals(res.toString(), expectedValue.toString(), msg = "Failed to get the column values");
         } else {
             test:assertFail(sheets.message());
         }
@@ -523,8 +525,9 @@ function testClearRange() {
             if (setRes is ()) {
                 var getRes = sheet->getRange("A15:D19");
                 if (getRes is Range) {
+                    Range expectedValue1={"a1Notation":"A15:D19","values":[["Name","Score","Performance","Average"],["Keetz","12"],["Niro","78"],["Nisha","98"],["Kana","86"]]};
                     test:assertEquals(getRes.values.toString(),
-                    "Name Score Performance Average Keetz 12 Niro 78 Nisha 98 Kana 86",
+                    expectedValue1.values.toString(),
                     msg = "Failed to get the values of the range");
                 } else {
                     test:assertFail(getRes.message());
@@ -533,7 +536,8 @@ function testClearRange() {
                 if (clearRange is ()) {
                     var getClear = sheet->getRange("A15:D19");
                     if (getClear is Range) {
-                        test:assertEquals(getClear.values.toString(), "", msg = "Failed to clear the range");
+                        Range expectedValue2={"a1Notation":"A15:D19","values":[]};
+                        test:assertEquals(getClear.values.toString(),expectedValue2.values.toString(), msg = "Failed to clear the range");
                     } else {
                         test:assertFail(getClear.message());
                     }
@@ -564,7 +568,8 @@ function testClearAll() {
             if (clearAll is ()) {
                 var getRes = sheet->getRange("A1:H20");
                 if (getRes is Range) {
-                    test:assertEquals(getRes.values.toString(), "", msg = "Failed to clear the sheet");
+                    Range expectedValue={"a1Notation":"A1:H20","values":[]};
+                    test:assertEquals(getRes.values.toString(), expectedValue.values.toString(), msg = "Failed to clear the sheet");
                 } else {
                     test:assertFail(getRes.message());
                 }
